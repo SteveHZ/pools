@@ -1,0 +1,22 @@
+[% META title = 'Pools - Home' -%]
+
+<h2>Pools</h2>
+
+<table>
+	[% FOREACH key IN data.keys.sort %]
+		<tr>
+			<td>[% key %] - Home</td>
+			[% FOREACH result IN data.$key.home %]
+				<td>[% result.result %] [% result.home %]-[% result.away %]</td>
+			[% END %]
+		</tr>
+		<tr>
+			<td>[% key %] - Away</td>
+			[% FOREACH result IN data.$key.away %]
+				<td>[% result.result %] [% result.home %]-[% result.away %]</td>
+			[% END %]
+		</tr>
+	[% END %]
+</table>
+
+<p><a href="[% c.uri_for(c.controller.action_for('home')) %]">Home</a></p>

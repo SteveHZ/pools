@@ -1,0 +1,26 @@
+[% META title = 'Football Pools - Enter Fixtures' -%]
+
+<form method = "post" action = "[% c.uri_for (c.controller.action_for ('do_fixtures')) %]">
+<h2 id = "header">Enter Fixtures</h2>
+	[% count = 0 %]
+	[% WHILE count < 6 %]
+		<div>
+			<select name = "h[% count %]" class="home">
+				<option value="" selected disabled>Home</option>
+				[% FOREACH team IN data.keys.sort %]
+					<option value = "[% team %]">[% team %]</option>
+				[% END %]
+			</select>
+			v.
+			<select name = "a[% count %]" class="away">
+				<option value="" selected disabled>Away</option>
+				[% FOREACH team IN data.keys.sort %]
+					<option value = "[% team %]">[% team %]</option>
+				[% END %]
+			</select>
+			<br/>
+		</div>
+		[% count = count + 1 %]
+	[% END %]
+	<input type = "submit" value = "OK" />
+</form>

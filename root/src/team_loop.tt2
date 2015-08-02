@@ -1,0 +1,3 @@
+		[% FOREACH team IN data %]
+			<option value = "[% loop.count %]">[%team %]</option>
+		[% END %]

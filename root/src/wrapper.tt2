@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>[% template.title or "Wrapper Test" %]</title>
+		<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/mine.css') %]" />
+		<script src="[% c.uri_for('/static/js/StripeTables.js') %]"></script>
+	</head>
+
+	<body>
+		<div class="content">
+			<span class="message">[% status_msg %]</span>
+			<span class="error">[% error_msg %]</span>
+			[% content %]
+		</div>
+
+		<div id="footer">
+			<strong id="footer">
+				<br/>[% template.title %]
+				<br/>&copy; 2015 - Zappa. All rights reserved.
+			</strong>
+		</div>
+	</body>
+</html>

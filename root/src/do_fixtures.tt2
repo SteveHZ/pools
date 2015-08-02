@@ -1,0 +1,11 @@
+[% META title = 'Football Pools - Fixture List' -%]
+
+<h2>Fixture List</h2>
+
+<h3>
+[% FOREACH match IN fixtures %]
+	[% match.home %] v [% match.away %]<br/>
+[% END %]
+</h3>
+
+<p><a href="[% c.uri_for(c.controller.action_for('home')) %]">Home</a></p>

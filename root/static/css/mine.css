@@ -1,0 +1,132 @@
+body {
+	background-color:aqua;
+}
+table {
+	margin-left:auto;
+	margin-right:auto;
+	border:2px solid blue;
+	background-color:pink;
+}
+td {
+	border:1px solid blue;
+	padding: 0 2em 0 2em;
+	text-align:center;
+}
+.stripes {
+	background-color:white;
+}
+h1,h3 {
+	color:blue;
+}
+h3.red {
+	color:red;
+}
+p {
+//	text-align:center;
+	color:blue;
+}
+p.centered {
+	text-align:center;
+	color:blue;
+}
+
+span.message {
+	color:green;
+}
+h3.heading {
+	font-weight:bold;
+	text-decoration:underline;
+}
+h3.reverse {
+	background-color:blue;
+	color:yellow;
+}
+
+
+form {
+	width:450px; /* 300px originally, 450px for home-away */
+	background:#d9d9d9;/* url(../img/login_bg.jpg) repeat-x 0 0;*/
+	border:1px solid white;
+	margin:50px auto 0;
+	padding:1em;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+}
+
+login.form {
+}
+/*
+h1,h2,h3,h4,h5 {
+	margin-top:0;
+	font-family:arial;
+	color:#f8f8f8;
+	text-align:center;
+}
+*/
+input[type=text], input[type=password], textarea {
+	display:block;
+	margin:0 0 0 0;
+	width:200px;
+	height:20px;
+	border:1px solid blue;
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	padding:1em;
+	background-color:#c9c9c9;
+}
+input[type=submit], form a {
+	border:none;
+	margin-top:2em;
+	margin-right:1em;
+	padding:6px;
+	text-decoration:none;
+	font-size:12px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	background:#348075;
+	color:white;
+	box-shadow:shadow:0 1px 0 white;
+	-moz-border-shadow:0 1px 0 white;
+	-webkit-border-shadow:0 1px 0 white;
+}	
+input[type=submit]:hover, form a:hover{
+	background:#237368;
+	cursor:pointer;
+}
+select {
+	display:block;
+	background-color:#c9c9c9;
+	border:1px solid blue;
+	width:200px;
+	height:20px;
+}
+h2.centered {
+	color:blue;
+	text-align:center;
+}
+h2#header {
+	color:darkblue;
+	text-align:center;
+}
+a.noline {
+	text-decoration:none;
+}
+select.home {
+    background-color: white;
+    color: blue;
+	float:left;
+	margin:0 20px 10px 0;
+
+}
+select.away {
+    background-color: pink;
+    color: blue;
+	float:right;
+	margin:0 0 10px 0;
+}
+div {
+	clear:both;
+}
+div.home {
+	margin:0 0 15px 0;
+}
