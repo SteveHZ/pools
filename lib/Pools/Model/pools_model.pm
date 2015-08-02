@@ -52,25 +52,6 @@ sub read_teams {
 	return \%league;
 }
 
-sub write_teams {
-	my ($key,$str);
-	my (@sorted);
-
-	open (FH,'>',$teams) or die ("Can't create teams.csv");
-
-	@sorted = sort {$a cmp $b} (keys %league );
-	foreach $key (@sorted) {
-		$str = [];
-		$league{$key}->csvStats ($str);			
-
-		print FH $league{$key}->teamNo (),",";
-		print FH $key,",";
-		print FH $_ foreach (@$str);
-		print FH "\n";
-	}
-	close FH;
-}
-
 sub update {
 	my ($line,$home,$away,$h,$a,$junk,@junk);
 
@@ -103,6 +84,33 @@ sub fixture_list {
 			];
 }
 
+sub write_teams {
+	my $tt = Template->new;
+	open my $out, '>:raw', $teams or die "$teams: $!\n";
+
+	$tt->process ('root/src/teams_csv.tt2',
+		{ data => \%league }, $out)
+		or die $tt->error;
+}
+
+sub old_write_teams {
+	my ($key,$str);
+	my (@sorted);
+
+	open (FH,'>',$teamstest) or die ("Can't create teams.csv");
+
+	@sorted = sort {$a cmp $b} (keys %league );
+	foreach $key (@sorted) {
+		$str = [];
+		$league{$key}->csvStats ($str);			
+
+		print FH $league{$key}->teamNo (),",";
+		print FH $key,",";
+		print FH $_ foreach (@$str);
+		print FH "\n";
+	}
+	close FH;
+}
 
 
 __PACKAGE__->meta->make_immutable;

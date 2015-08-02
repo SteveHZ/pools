@@ -1,0 +1,8 @@
+[% FOREACH key IN league.sort %]
+	[% league.$key.teamNo %]
+
+	[% stats = league.$key.stats %],
+	[% FOREACH game IN stats %]
+		[% game %],
+	[% END %]
+[% END %]
