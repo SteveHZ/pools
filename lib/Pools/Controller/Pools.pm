@@ -43,7 +43,6 @@ sub home :Chained('base') PathPart('home') {
 sub update :Chained('base') PathPart('update') {
 	my ($self, $c) = @_;
 
-#	$c->stash ( template => 'teams_csv.tt2',
 	$c->stash ( template => 'show_data.tt2',
 				data => $c->model ('pools_model')
 						  ->update (),

@@ -86,7 +86,7 @@ sub fixture_list {
 
 sub write_teams {
 	my $tt = Template->new;
-	open my $out, '>:raw', $teams or die "$teams: $!\n";
+	open my $out, '>:raw', $teams or die "Can't create $teams: $!\n";
 
 	$tt->process ('root/src/teams_csv.tt2',
 		{ data => \%league }, $out)
