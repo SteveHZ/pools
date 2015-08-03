@@ -38,6 +38,7 @@ my $teams = $path.'teams.csv';
 #my $teams = $path.'teamsblank 2015.csv';
 my $teamstest = $path.'teamstest.csv';
 my $new_teams = $path.'new_teams.csv';
+my $teamsxml = $path.'teams.xml';
 
 sub read_teams {
 	my (@stats);
@@ -52,6 +53,25 @@ sub read_teams {
 	return \%league;
 }
 
+sub write_teams_csv {
+	my $tt = Template->new;
+	open my $out, '>:raw', $teams or die "Can't create $teams: $!\n";
+
+	$tt->process ('root/src/teams_csv.tt2',
+		{ data => \%league }, $out)
+		or die $tt->error;
+	close $out;
+}
+
+sub write_teams_xml {
+	my $tt = Template->new;
+	open my $out, '>:raw', $teamsxml or die "Can't create $teamsxml: $!\n";
+
+	$tt->process ('root/src/teams_xml.tt2',
+		{ data => \%league }, $out)
+		or die $tt->error;
+	close $out;
+}
 sub update {
 	my ($line,$home,$away,$h,$a,$junk,@junk);
 
@@ -69,7 +89,8 @@ sub update {
 	}
 	close FH;
 #	write_teams ();
-	new_write_teams ();
+	write_teams_xml ();
+#	write_teams_csv ();
 	return \%league;
 }
 
@@ -103,18 +124,6 @@ sub write_teams {
 	}
 	close FH;
 }
-
-sub new_write_teams {
-	my $tt = Template->new;
-	open my $out, '>:raw', $teams or die "Can't create $teams: $!\n";
-
-	$tt->process ('root/src/teams_csv.tt2',
-		{ data => \%league }, $out)
-		or die $tt->error;
-	close $out;
-}
-
-
 
 __PACKAGE__->meta->make_immutable;
 

@@ -1,0 +1,12 @@
+<xml>
+[% FOREACH team IN data.keys.sort -%]
+	<team = "[%- team -%]">
+		<teamNo>[%- data.$team.teamNo -%]</teamNo>
+		<results>
+		[%- FOREACH score IN data.$team.stats %]
+			<score>[%- score -%]</score>
+		[%- END %]
+		</results>
+	</team>
+[% END -%]
+</xml>
