@@ -37,6 +37,7 @@ my $premdata = $path.'E0.csv';
 my $teams = $path.'teams.csv';
 #my $teams = $path.'teamsblank 2015.csv';
 my $teamstest = $path.'teamstest.csv';
+my $new_teams = $path.'new_teams.csv';
 
 sub read_teams {
 	my (@stats);
@@ -44,7 +45,6 @@ sub read_teams {
 
 	open (FH,'<',$teams) or die ("Can't find teams.csv");
 	while ($line = <FH>) {
-		chomp ($line);
 		($teamNo,$team,@stats) = split (/,/,$line);
 		$league{$team} = Team->new ($teamNo,\@stats);
 	}
@@ -68,7 +68,8 @@ sub update {
 		push $league{$away}->away (), Score->new ($a, $h);
 	}
 	close FH;
-	write_teams ();
+#	write_teams ();
+	new_write_teams ();
 	return \%league;
 }
 
@@ -85,21 +86,12 @@ sub fixture_list {
 }
 
 sub write_teams {
-	my $tt = Template->new;
-	open my $out, '>:raw', $teams or die "Can't create $teams: $!\n";
-
-	$tt->process ('root/src/teams_csv.tt2',
-		{ data => \%league }, $out)
-		or die $tt->error;
-}
-
-sub old_write_teams {
 	my ($key,$str);
 	my (@sorted);
 
-	open (FH,'>',$teamstest) or die ("Can't create teams.csv");
+	open (FH,'>',$teams) or die ("Can't create teams.csv");
 
-	@sorted = sort {$a cmp $b} (keys %league );
+	@sorted = sort {$a cmp $b} ( keys %league );
 	foreach $key (@sorted) {
 		$str = [];
 		$league{$key}->csvStats ($str);			
@@ -111,6 +103,17 @@ sub old_write_teams {
 	}
 	close FH;
 }
+
+sub new_write_teams {
+	my $tt = Template->new;
+	open my $out, '>:raw', $teams or die "Can't create $teams: $!\n";
+
+	$tt->process ('root/src/teams_csv.tt2',
+		{ data => \%league }, $out)
+		or die $tt->error;
+	close $out;
+}
+
 
 
 __PACKAGE__->meta->make_immutable;

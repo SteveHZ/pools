@@ -1,9 +1,8 @@
 [% FOREACH team IN data.keys.sort %]
-	[%- stats = data.$team.stats %]
 	[%- data.$team.teamNo %],[% team %],
-	[%- FOREACH score IN stats %]
+	[%- FOREACH score IN data.$team.stats %]
 		[%- score -%]
-		[%- UNLESS loop.count == stats.size %],[% ELSE %]
-		[% END %]
+		[%- IF loop.count < data.$team.stats.size %],
+		[%- END %]
 	[%- END %]
-[%- END %]
+[% END -%]
