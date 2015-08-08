@@ -59,10 +59,13 @@ sub do_fixtures :Path('do_fixtures') {
 	my ($self, $c) = @_;
 	
 	my $params = params ($c, qw /h0 a0 h1 a1 h2 a2 h3 a3 h4 a4 h5 a5/);
+	my $fixtures = $c->model ('pools_model')
+					 ->fixture_list ($params);
 	
 	$c->stash ( template => 'do_fixtures.tt2',
-				fixtures => $c->model ('pools_model')
-							  ->fixture_list ($params),
+				fixtures => $fixtures,
+#				data - this could return fixtures as part of a hash ???
+#predictions => $c->model ('pools_model')->predictions ($fixtures),
 	);
 }
 	

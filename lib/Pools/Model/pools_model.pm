@@ -35,10 +35,9 @@ my $path = 'root/static/data/';
 
 my $premdata = $path.'E0.csv';
 my $teams = $path.'teams.csv';
+my $teams_xml = $path.'teams.xml';
 #my $teams = $path.'teamsblank 2015.csv';
 my $teamstest = $path.'teamstest.csv';
-my $new_teams = $path.'new_teams.csv';
-my $teamsxml = $path.'teams.xml';
 
 sub read_teams {
 	my (@stats);
@@ -53,25 +52,22 @@ sub read_teams {
 	return \%league;
 }
 
-sub write_teams_csv {
-	my $tt = Template->new;
-	open my $out, '>:raw', $teams or die "Can't create $teams: $!\n";
+sub write_teams {
+	my ($file, $filetype) = @_;
 
-	$tt->process ('root/src/teams_csv.tt2',
+	my $tt = Template->new;
+	open my $out, '>:raw', "$file"
+		or die "Can't create $file : $!\n";
+
+	$tt->process ("root/src/teams_${filetype}.tt2",
 		{ data => \%league }, $out)
 		or die $tt->error;
 	close $out;
 }
 
-sub write_teams_xml {
-	my $tt = Template->new;
-	open my $out, '>:raw', $teamsxml or die "Can't create $teamsxml: $!\n";
+sub write_teams_csv { write_teams ($teams, 'csv'); }
+sub write_teams_xml { write_teams ($teams_xml, 'xml'); }
 
-	$tt->process ('root/src/teams_xml.tt2',
-		{ data => \%league }, $out)
-		or die $tt->error;
-	close $out;
-}
 sub update {
 	my ($line,$home,$away,$h,$a,$junk,@junk);
 
@@ -88,9 +84,7 @@ sub update {
 		push $league{$away}->away (), Score->new ($a, $h);
 	}
 	close FH;
-#	write_teams ();
-	write_teams_xml ();
-#	write_teams_csv ();
+	write_teams_csv ();
 	return \%league;
 }
 
@@ -106,7 +100,9 @@ sub fixture_list {
 			];
 }
 
-sub write_teams {
+=head2
+
+sub old_write_teams {
 	my ($key,$str);
 	my (@sorted);
 
@@ -124,6 +120,8 @@ sub write_teams {
 	}
 	close FH;
 }
+
+=cut
 
 __PACKAGE__->meta->make_immutable;
 
