@@ -43,8 +43,10 @@ sub read_teams {
 	my (@stats);
 	my ($line,$div,$teamNo,$team);
 
+%league=();
 	open (FH,'<',$teams) or die ("Can't find teams.csv");
 	while ($line = <FH>) {
+#$DB::single=1;
 		($teamNo,$team,@stats) = split (/,/,$line);
 		$league{$team} = Team->new ($teamNo,\@stats);
 	}
@@ -100,6 +102,50 @@ sub fixture_list {
 			];
 }
 
+sub predictions {
+	my ($self, $fixtures) = @_;
+	my @predict = ();
+	my $sorted;
+	
+	foreach my $match (@$fixtures) {
+		$match->{prediction} = results ("$match->{home}", "$match->{away}");
+	}
+	$sorted = [ sort {$b->{prediction} <=> $a->{prediction}} @$fixtures ];
+	return $sorted;
+}
+
+sub results {
+	my ($home, $away) = @_;
+	my ($homes, $aways, $score, $total, $h,$a,);
+	$h = 0; $a = 0;
+
+	foreach $homes ($league{$home}->home()) {
+		foreach $score(@$homes) {
+			$h++ if $score->result() eq 'D' || $score->result() eq "N";
+		}	
+	}
+	foreach $aways ($league{$away}->away ()) {
+		foreach $score (@$aways) {
+			$a++ if $score->result() eq "D" || $score->result() eq "N";
+		}
+	}
+	$total = sprintf ("%.2f", ($h/6 * 50) + ($a/6 * 50));
+	return $total;
+}
+=head2
+sub first {
+	my ($homeref,$awayref) = @_;
+	my ($home,$away,$total);
+	$home = 0; $away = 0;
+
+	foreach (@{$homeref}) {
+		$home ++ if $_ eq "D";
+	}
+	foreach (@{$awayref}) {
+		$away ++ if $_ eq "D";
+	}
+}
+=cut
 =head2
 
 sub old_write_teams {

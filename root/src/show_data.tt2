@@ -2,6 +2,8 @@
 
 <h2>Pools</h2>
 
+<p><a href="[% c.uri_for(c.controller.action_for('home')) %]">Home</a></p>
+
 <table>
 	[% FOREACH key IN data.keys.sort %]
 		<tr>

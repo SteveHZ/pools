@@ -1,11 +1,17 @@
 [% META title = 'Football Pools - Fixture List' -%]
+[%# USE Dumper; Dumper.dump (fixtures) %]
 
 <h2>Fixture List</h2>
 
-<h3>
-[% FOREACH match IN fixtures %]
-	[% match.home %] v [% match.away %]<br/>
+<table>
+	<tr><th>Fixtures</th><th>Prediction</th></tr>
+	[% FOREACH match IN fixtures %]
+		<tr>
+			<td>[% match.home %] v [% match.away %]</td>
+			<td>[% match.prediction %] %</td>
+		</tr>
 [% END %]
+</table>
 </h3>
 
 <p><a href="[% c.uri_for(c.controller.action_for('home')) %]">Home</a></p>
