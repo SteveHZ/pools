@@ -43,10 +43,8 @@ sub read_teams {
 	my (@stats);
 	my ($line,$div,$teamNo,$team);
 
-%league=();
 	open (FH,'<',$teams) or die ("Can't find teams.csv");
 	while ($line = <FH>) {
-#$DB::single=1;
 		($teamNo,$team,@stats) = split (/,/,$line);
 		$league{$team} = Team->new ($teamNo,\@stats);
 	}
@@ -132,6 +130,7 @@ sub results {
 	$total = sprintf ("%.2f", ($h/6 * 50) + ($a/6 * 50));
 	return $total;
 }
+
 =head2
 sub first {
 	my ($homeref,$awayref) = @_;
