@@ -13,3 +13,9 @@
 	<input type="button" class="indent" value="Enter Fixtures" />
 </a>
 </div>
+
+<div class = "home">
+<a class = "noline" href="test">
+	<input type="button" class="indent" value="Test Fixtures" />
+</a>
+</div>

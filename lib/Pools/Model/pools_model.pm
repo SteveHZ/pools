@@ -14,7 +14,7 @@ Pools::Model::pools_model - Catalyst Model
 =head1 DESCRIPTION
 
 Catalyst Model.
-
+pools_model
 
 =encoding utf8
 
@@ -91,82 +91,103 @@ sub update {
 sub fixture_list {
 	my ($self, $params) = @_;
 	
-	return	[ 	{ 'home' => $params->{'h0'}, 'away' => $params->{'a0'} },
-				{ 'home' => $params->{'h1'}, 'away' => $params->{'a1'} },
-				{ 'home' => $params->{'h2'}, 'away' => $params->{'a2'} },
-				{ 'home' => $params->{'h3'}, 'away' => $params->{'a3'} },
-				{ 'home' => $params->{'h4'}, 'away' => $params->{'a4'} },
-				{ 'home' => $params->{'h5'}, 'away' => $params->{'a5'} },
-			];
+	return [
+		{ home => $params->{h0}, away => $params->{a0} },
+		{ home => $params->{h1}, away => $params->{a1} },
+		{ home => $params->{h2}, away => $params->{a2} },
+		{ home => $params->{h3}, away => $params->{a3} },
+		{ home => $params->{h4}, away => $params->{a4} },
+		{ home => $params->{h5}, away => $params->{a5} },
+	];
+}
+
+sub get_test_fixtures {
+
+	return [
+		{ home => 'Arsenal',	away => 'Aston Villa' },
+		{ home => 'Chelsea', 	away => 'Crystal Palace' },
+		{ home => 'Leicester', 	away => 'Liverpool' },
+		{ home => 'Man City', 	away => 'Man United' },
+		{ home => 'Southampton',away => 'Stoke' },
+		{ home => 'West Brom', 	away => 'West Ham' },
+	];
 }
 
 sub predictions {
 	my ($self, $fixtures) = @_;
-	my @predict = ();
 	my $sorted;
 	
 	foreach my $match (@$fixtures) {
-		$match->{prediction} = results ("$match->{home}", "$match->{away}");
+		$match->{draw_predict} = predict_draws ($match);
+		$match->{score_predict} = predict_scores ($match);
 	}
-	$sorted = [ sort {$b->{prediction} <=> $a->{prediction}} @$fixtures ];
+	$sorted = [ sort {$b->{draw_predict} <=> $a->{draw_predict} } @$fixtures ];
 	return $sorted;
 }
 
-sub results {
-	my ($home, $away) = @_;
-	my ($homes, $aways, $score, $total, $h,$a,);
+sub predict_draws {
+	my ($match) = shift;
+	my ($homes, $aways, $game, $total, $h, $a);
+
+	my $home = $match->{home};
+	my $away = $match->{away};
 	$h = 0; $a = 0;
 
 	foreach $homes ($league{$home}->home()) {
-		foreach $score(@$homes) {
-			$h++ if $score->result() eq 'D' || $score->result() eq "N";
+		foreach $game(@$homes) {
+			$h++ if $game->result() eq 'D' || $game->result() eq "N";
 		}	
 	}
 	foreach $aways ($league{$away}->away ()) {
-		foreach $score (@$aways) {
-			$a++ if $score->result() eq "D" || $score->result() eq "N";
+		foreach $game (@$aways) {
+			$a++ if $game->result() eq "D" || $game->result() eq "N";
 		}
 	}
 	$total = sprintf ("%.2f", ($h/6 * 50) + ($a/6 * 50));
 	return $total;
 }
 
-=head2
-sub first {
-	my ($homeref,$awayref) = @_;
-	my ($home,$away,$total);
-	$home = 0; $away = 0;
+sub predict_scores {
+	my ($match) = shift;
+	my ($homes, $aways, $game, $h, $a);
+	my ($high_home, $high_away, $highh, $higha);
 
-	foreach (@{$homeref}) {
-		$home ++ if $_ eq "D";
+	my $home = $match->{home};
+	my $away = $match->{away};
+	$h = 0; $a = 0;
+	$highh = 0; $higha = 0;
+
+	foreach $homes ($league{$home}->home()) {
+		foreach $game(@$homes) {
+			$h += $game->home ();
+			$highh = $game->home () if $game->home () > $highh;
+		}	
 	}
-	foreach (@{$awayref}) {
-		$away ++ if $_ eq "D";
+	foreach $aways ($league{$away}->away ()) {
+		foreach $game (@$aways) {
+			$a += $game->away ();
+			$higha = $game->away () if $game->away () > $higha;
+		}
 	}
+	$high_home = $h - $highh;
+	$high_away = $a - $higha;
+
+	return {
+		totals => Score->new ($h, $a),
+		average => Score->new (sprintf ("%.2f",$h/6), sprintf ("%.2f",$a/6)),
+		rounded => Score->new (round ($h/6), round ($a/6)),
+		zero_weighted => Score->new (round ($h/6, 0), round ($a/6, 0)),
+		minus_weighted => Score->new (round ($h/6, -0.5), round ($a/6, -0.5)),
+		high_weighted => Score->new (round ($high_home/6), round ($high_away/6)),
+	};
 }
-=cut
-=head2
 
-sub old_write_teams {
-	my ($key,$str);
-	my (@sorted);
+sub round {
+	my ($number, $weight) = @_;
+	$weight = 0.5 unless defined $weight;
 
-	open (FH,'>',$teams) or die ("Can't create teams.csv");
-
-	@sorted = sort {$a cmp $b} ( keys %league );
-	foreach $key (@sorted) {
-		$str = [];
-		$league{$key}->csvStats ($str);			
-
-		print FH $league{$key}->teamNo (),",";
-		print FH $key,",";
-		print FH $_ foreach (@$str);
-		print FH "\n";
-	}
-	close FH;
+	return int ($number + $weight);
 }
-
-=cut
 
 __PACKAGE__->meta->make_immutable;
 

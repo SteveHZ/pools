@@ -7,7 +7,7 @@ BEGIN { extends 'Catalyst::Controller'; }
 =head1 NAME
 
 Pools::Controller::Pools - Catalyst Controller
-v1 July 2015
+v1 July 2015 - 18/08/15
 
 =head1 DESCRIPTION
 
@@ -43,9 +43,10 @@ sub home :Chained('base') PathPart('home') {
 sub update :Chained('base') PathPart('update') {
 	my ($self, $c) = @_;
 
-	$c->stash ( template => 'show_data.tt2',
-				data => $c->model ('pools_model')
-						  ->update (),
+	$c->stash (
+		template => 'show_data.tt2',
+		data => $c->model ('pools_model')
+				  ->update (),
 	);
 }
 
@@ -57,24 +58,29 @@ sub enter_fixtures :Chained('base') PathPart('enter_fixtures') {
 
 sub do_fixtures :Path('do_fixtures') {
 	my ($self, $c) = @_;
-	
-	my $params = params ($c, qw /h0 a0 h1 a1 h2 a2 h3 a3 h4 a4 h5 a5/);
+	my $params = $c->request->params;
+
 	my $fixtures = $c->model ('pools_model')
 					 ->fixture_list ($params);
 	
-	$c->stash ( template => 'do_fixtures.tt2',
-				fixtures => $c->model ('pools_model')->predictions ($fixtures),
+	$c->stash (
+		template => 'do_fixtures.tt2',
+		fixtures => $c->model ('pools_model')->predictions ($fixtures),
 	);
 }
+
+sub test :Path('test') {
+	my ($self, $c) = @_;
 	
-sub params {
-	my ($c, @params) = @_;
-	my $hash = {};
+	my $fixtures = $c->model ('pools_model')
+					 ->get_test_fixtures ();
 	
-	$hash->{$_} = $c->request->params->{$_} foreach (@params);
-	return $hash;
+	$c->stash (
+		template => 'do_fixtures.tt2',
+		fixtures => $c->model ('pools_model')->predictions ($fixtures),
+	);
 }
-	
+
 =encoding utf8
 
 =head1 AUTHOR
