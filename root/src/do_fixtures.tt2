@@ -11,6 +11,15 @@
 		<th>Averages</th>
 		<th colspan = '[% fixtures.first.score_predict.size %]'>Score Predictions</th>
 	</tr>
+	<tr>
+		<td></td><td></td><td></td><td></td>
+		<td>Rounded</td>
+		<td>Quarter</td>
+		<td>Zero</td>
+		<td>Minus</td>
+		<td>High</td>
+		<td>Mean</td>
+	</tr>
 	[% FOREACH match IN fixtures %]
 		<tr>
 			<td>[% match.home %] v [% match.away %]</td>
@@ -18,12 +27,13 @@
 			<td>[% match.score_predict.totals.score %]</td>
 			<td>[% match.score_predict.average.score %]</td>
 			<td>[% match.score_predict.rounded.score %]</td>
+			<td>[% match.score_predict.quarter_weighted.score %]</td>
 			<td>[% match.score_predict.zero_weighted.score %]</td>
 			<td>[% match.score_predict.minus_weighted.score %]</td>
 			<td>[% match.score_predict.high_weighted.score %]</td>
+			<td>[% match.score_predict.mean_weighted.score %]</td>
 		</tr>
 	[% END %]
 </table>
-</h3>
 
 <p><a href="[% c.uri_for(c.controller.action_for('home')) %]">Home</a></p>

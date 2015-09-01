@@ -151,34 +151,42 @@ sub predict_scores {
 	my ($match) = shift;
 	my ($homes, $aways, $game, $h, $a);
 	my ($high_home, $high_away, $highh, $higha);
-
+	my ($mean_home, $mean_away, $lowh, $lowa);
+	
 	my $home = $match->{home};
 	my $away = $match->{away};
 	$h = 0; $a = 0;
 	$highh = 0; $higha = 0;
-
+	$lowh = 100; $lowa = 100;
+	
 	foreach $homes ($league{$home}->home()) {
 		foreach $game(@$homes) {
 			$h += $game->home ();
 			$highh = $game->home () if $game->home () > $highh;
+			$lowh = $game->home () if $game->home () < $lowh;
 		}	
 	}
 	foreach $aways ($league{$away}->away ()) {
 		foreach $game (@$aways) {
 			$a += $game->away ();
 			$higha = $game->away () if $game->away () > $higha;
+			$lowa = $game->away () if $game->away () < $lowa;
 		}
 	}
 	$high_home = $h - $highh;
 	$high_away = $a - $higha;
-
+	$mean_home = $high_home - $lowh;
+	$mean_away = $high_away - $lowa;
+	
 	return {
 		totals => Score->new ($h, $a),
 		average => Score->new (sprintf ("%.2f",$h/6), sprintf ("%.2f",$a/6)),
 		rounded => Score->new (round ($h/6), round ($a/6)),
 		zero_weighted => Score->new (round ($h/6, 0), round ($a/6, 0)),
+		quarter_weighted => Score->new (round ($h/6, 0.25), round ($a/6, 0.25)),
 		minus_weighted => Score->new (round ($h/6, -0.5), round ($a/6, -0.5)),
-		high_weighted => Score->new (round ($high_home/6), round ($high_away/6)),
+		high_weighted => Score->new (round ($high_home/5), round ($high_away/5)),
+		mean_weighted => Score->new (round ($mean_home/4), round ($mean_away/4)),
 	};
 }
 
