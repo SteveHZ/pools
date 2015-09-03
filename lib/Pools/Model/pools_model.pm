@@ -149,15 +149,14 @@ sub predict_draws {
 
 sub predict_scores {
 	my ($match) = shift;
-	my ($homes, $aways, $game, $h, $a);
-	my ($high_home, $high_away, $highh, $higha);
-	my ($mean_home, $mean_away, $lowh, $lowa);
+	my ($homes, $aways, $game);
+	my ($high_home, $high_away);
+	my ($mean_home, $mean_away);
 	
+	my ($h, $a,	$highh, $higha) = (0,0,0,0);
+	my ($lowh, $lowa) = (100,100);
 	my $home = $match->{home};
 	my $away = $match->{away};
-	$h = 0; $a = 0;
-	$highh = 0; $higha = 0;
-	$lowh = 100; $lowa = 100;
 	
 	foreach $homes ($league{$home}->home()) {
 		foreach $game(@$homes) {

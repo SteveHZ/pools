@@ -14,25 +14,19 @@ use Test::WWW::Mechanize::Catalyst "Pools";
  
 my $user = Test::WWW::Mechanize::Catalyst->new;
 
-$user->get_ok("http://localhost:3000/pools", "Localhost/pools");
+$user->get_ok("http://localhost:3000/pools", "Goto Localhost/pools");
 $user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
-$user->get_ok("http://localhost:3000/pools/home", "Home page");
+$user->get_ok("http://localhost:3000/pools/home", "Goto pools/home");
 $user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
 
 print "\n";
 $user->follow_link_ok({n => 2}, "Follow update link");
-$user->title_is("Pools - Update", "Check title is Pools - Update");
-$user->get_ok("http://localhost:3000/pools/home", "Home page");
+$user->title_is("Football Pools - Update", "Check title is Football Pools - Update");
+$user->get_ok("http://localhost:3000/pools/home", "Back to Home page");
 $user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
 
 print "\n";
-$user->follow_link_ok({n => 4}, "Follow Test Fixtures link");
-$user->title_is("Football Pools - Predictions", "Check title is Football Pools - Predictions");
-$user->get_ok("http://localhost:3000/pools/home", "Home page");
-$user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
-
-print "\n";
-$user->follow_link_ok({n => 3}, "Follow Enter Fixtures link");
+$user->follow_link_ok({n => 3}, "Follow Super6 Enter Fixtures link");
 $user->submit_form (
     fields => {
         h0 => 'Arsenal',		a0 => 'Aston Villa',
@@ -45,8 +39,38 @@ $user->submit_form (
 	
 $user->title_is("Football Pools - Predictions", "Check title is Football Pools - Predictions");
 $user->content_contains("Arsenal", "Check teams on page");
-$user->get_ok("http://localhost:3000/pools/home", "Home page");
+$user->get_ok("http://localhost:3000/pools/home", "Back to Home page");
 $user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
+
+print "\n";
+$user->follow_link_ok({n => 4}, "Follow Super6 Test Fixtures link");
+$user->title_is("Football Pools - Predictions", "Check title is Football Pools - Predictions");
+$user->get_ok("http://localhost:3000/pools/home", "Back to Home page");
+$user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
+
+print "\n";
+$user->follow_link_ok({n => 5}, "Follow Pools Enter Fixtures link");
+$user->submit_form (
+    fields => {
+        h0 => 'Arsenal',		a0 => 'Aston Villa',
+		h1 => 'Chelsea',		a1 => 'Crystal Palace',
+        h2 => 'Leicester', 		a2 => 'Liverpool',
+		h3 => 'Man City', 		a3 => 'Man United',
+        h4 => 'Southampton', 	a4 => 'Stoke',
+		h5 => 'West Brom', 		a5 => 'West Ham',
+    });
+	
+$user->title_is("Football Pools - Predictions", "Check title is Football Pools - Predictions");
+$user->content_contains("Arsenal", "Check teams on page");
+$user->get_ok("http://localhost:3000/pools/home", "Back to Home page");
+$user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
+
+print "\n";
+$user->follow_link_ok({n => 6}, "Follow Pools Test Fixtures link");
+$user->title_is("Football Pools - Predictions", "Check title is Football Pools - Predictions");
+$user->get_ok("http://localhost:3000/pools/home", "Back to Home page");
+$user->title_is("Football Pools - Home", "Check title is 'Football Pools - Home'");
+
 
 done_testing ();
 

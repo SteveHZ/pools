@@ -2,8 +2,6 @@
 
 <h2>Football Pools</h2>
 
-<h2>Football Pools</h2>
-
 <div class = "home">
 <a class = "noline" href="update">
 	<input type="button" class="indent" name = "update" value="Update" />
