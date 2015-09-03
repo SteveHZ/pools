@@ -14,11 +14,11 @@
 	<tr>
 		<td></td><td></td><td></td><td></td>
 		<td>Rounded</td>
+		<td>Mean</td>
+		<td>High</td>
 		<td>Quarter</td>
 		<td>Zero</td>
 		<td>Minus</td>
-		<td>High</td>
-		<td>Mean</td>
 	</tr>
 	[% FOREACH match IN fixtures %]
 		<tr>
@@ -27,11 +27,11 @@
 			<td>[% match.score_predict.totals.score %]</td>
 			<td>[% match.score_predict.average.score %]</td>
 			<td>[% match.score_predict.rounded.score %]</td>
+			<td>[% match.score_predict.mean_weighted.score %]</td>
+			<td>[% match.score_predict.high_weighted.score %]</td>
 			<td>[% match.score_predict.quarter_weighted.score %]</td>
 			<td>[% match.score_predict.zero_weighted.score %]</td>
 			<td>[% match.score_predict.minus_weighted.score %]</td>
-			<td>[% match.score_predict.high_weighted.score %]</td>
-			<td>[% match.score_predict.mean_weighted.score %]</td>
 		</tr>
 	[% END %]
 </table>

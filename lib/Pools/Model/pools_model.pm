@@ -191,8 +191,8 @@ sub predict_scores {
 }
 
 sub round {
-	my ($number, $weight) = @_;
-	$weight = 0.5 unless defined $weight;
+	my $number = shift;
+	my $weight = shift // 0.5;
 
 	return int ($number + $weight);
 }
