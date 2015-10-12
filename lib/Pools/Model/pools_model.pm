@@ -35,56 +35,64 @@ my $path = 'root/static/data/';
 
 my $premdata = $path.'E0.csv';
 my $teams = $path.'teams.csv';
-my $teams_xml = $path.'teams.xml';
+
 #my $teams = $path.'teamsblank 2015.csv';
-my $teamstest = $path.'teamstest.csv';
+#my $teams_xml = $path.'teams.xml';
+#my $teamstest = $path.'teamstest.csv';
+#my $teamstestxml = $path.'teamstest.xml';
 
 sub read_teams {
 	my (@stats);
-	my ($line,$div,$teamNo,$team);
+	my ($line, $div, $teamNo, $team);
 
-	open (FH,'<',$teams) or die ("Can't find teams.csv");
+	open (FH,'<', $teams) or die ("Can't find teams.csv");
 	while ($line = <FH>) {
-		($teamNo,$team,@stats) = split (/,/,$line);
-		$league{$team} = Team->new ($teamNo,\@stats);
+		($teamNo, $team, @stats) = split (/,/, $line);
+		$league {$team} = Team->new ($teamNo, \@stats);
 	}
 	close FH;
 	return \%league;
 }
 
 sub write_teams {
-	my ($file, $filetype) = @_;
+	my ($file) = @_;
+	
+	if ($file =~ /^(\S+)\.			# full path, filename and dot
+				(?<ext>\w{3}$)		# file extension
+				/x ) {
+		my $filetype = $+{ext};	# dont need filename, can just do label for ext
 
-	my $tt = Template->new;
-	open my $out, '>:raw', "$file"
-		or die "Can't create $file : $!\n";
+		my $tt = Template->new;
+		open my $out, '>:raw', "$file"
+			or die "Can't create $file : $!\n";
 
-	$tt->process ("root/src/teams_${filetype}.tt2",
-		{ data => \%league }, $out)
-		or die $tt->error;
-	close $out;
+		$tt->process ("root/src/teams_${filetype}.tt2",
+			{ data => \%league }, $out)
+			or die $tt->error;
+		close $out;
+	} else {
+		die "Unknown filetype !!!";
+	}
 }
 
-sub write_teams_csv { write_teams ($teams, 'csv'); }
-sub write_teams_xml { write_teams ($teams_xml, 'xml'); }
-
 sub update {
-	my ($line,$home,$away,$h,$a,$junk,@junk);
+	my ($line, $home, $away, $h, $a);
+	my ($junk, @junk);
 
 	open (FH,'<',$premdata) or die ("Can't find $premdata");
 	$line = <FH>;
 	while ($line = <FH>) {
-		($junk,$junk,$home,$away,$h,$a,@junk) = split (/,/,$line);
+		($junk, $junk, $home, $away, $h, $a, @junk) = split (/,/, $line);
 
 #		shift existing array down
-		shift $league{$home}->home ();
-		shift $league{$away}->away ();
+		shift $league{$home}->homes ();
+		shift $league{$away}->aways ();
 
-		push $league{$home}->home (), Score->new ($h, $a);			
-		push $league{$away}->away (), Score->new ($a, $h);
+		push $league{$home}->homes (), Score->new ($h, $a);			
+		push $league{$away}->aways (), Score->new ($a, $h);
 	}
 	close FH;
-	write_teams_csv ();
+	write_teams ($teams);
 	return \%league;
 }
 
@@ -133,12 +141,12 @@ sub predict_draws {
 	my $away = $match->{away};
 	$h = 0; $a = 0;
 
-	foreach $homes ($league{$home}->home()) {
+	foreach $homes ($league{$home}->homes()) {
 		foreach $game(@$homes) {
 			$h++ if $game->result() eq 'D' || $game->result() eq "N";
 		}	
 	}
-	foreach $aways ($league{$away}->away ()) {
+	foreach $aways ($league{$away}->aways ()) {
 		foreach $game (@$aways) {
 			$a++ if $game->result() eq "D" || $game->result() eq "N";
 		}
@@ -158,14 +166,14 @@ sub predict_scores {
 	my $home = $match->{home};
 	my $away = $match->{away};
 	
-	foreach $homes ($league{$home}->home()) {
+	foreach $homes ($league{$home}->homes()) {
 		foreach $game(@$homes) {
 			$h += $game->home ();
 			$highh = $game->home () if $game->home () > $highh;
 			$lowh = $game->home () if $game->home () < $lowh;
 		}	
 	}
-	foreach $aways ($league{$away}->away ()) {
+	foreach $aways ($league{$away}->aways ()) {
 		foreach $game (@$aways) {
 			$a += $game->away ();
 			$higha = $game->away () if $game->away () > $higha;

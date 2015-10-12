@@ -8,13 +8,13 @@
 	[% FOREACH key IN data.keys.sort %]
 		<tr>
 			<td>[% key %] - Home</td>
-			[% FOREACH result IN data.$key.home %]
+			[% FOREACH result IN data.$key.homes %]
 				<td>[% result.result %] [% result.home %]-[% result.away %]</td>
 			[% END %]
 		</tr>
 		<tr>
 			<td>[% key %] - Away</td>
-			[% FOREACH result IN data.$key.away %]
+			[% FOREACH result IN data.$key.aways %]
 				<td>[% result.result %] [% result.home %]-[% result.away %]</td>
 			[% END %]
 		</tr>
