@@ -25,7 +25,7 @@ Catalyst Controller.
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-	$c->response->redirect ($c->uri_for ($self->action_for ('home')));
+	$c->response->redirect ($c->uri("Pools.home"));
 }
 
 sub base :Chained('/') PathPart('pools') CaptureArgs(0) {

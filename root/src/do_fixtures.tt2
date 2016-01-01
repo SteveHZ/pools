@@ -36,4 +36,4 @@
 	[% END %]
 </table>
 
-<p><a href="[% c.uri_for(c.controller.action_for('home')) %]">Home</a></p>
+<p><a href="[% c.uri('.home') %]" >Home</a></p>

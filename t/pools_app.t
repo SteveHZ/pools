@@ -3,7 +3,9 @@
 
 #	usage on command line in pools directory :
 #	set catalyst_debug=0
-#	perl -w -Ilib pools_app.t
+#	perl -w -Ilib t/pools_app.t
+
+# 	OR prove -wl t in pools directory
 
 use strict;
 use warnings;

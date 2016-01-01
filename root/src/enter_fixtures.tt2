@@ -1,6 +1,7 @@
 [% META title = 'Football Pools - Enter Fixtures' -%]
 
-<form method = "post" action = "[% c.uri_for (c.controller.action_for ('do_fixtures')) %]">
+<form method = "post" action = "[% c.uri('.do_fixtures') %]">
+
 <h2 id = "header">Enter Fixtures</h2>
 	[% count = 0 %]
 	[% WHILE count < 6 %]

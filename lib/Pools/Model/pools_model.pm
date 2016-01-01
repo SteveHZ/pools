@@ -31,7 +31,7 @@ it under the same terms as Perl itself.
 
 my %league=();
 
-my $path = 'root/static/data/';
+my $path = 'C:/Mine/perl/Pools/root/static/data/';
 
 my $premdata = $path.'E0.csv';
 my $teams = $path.'teams.csv';
@@ -45,7 +45,7 @@ sub read_teams {
 	my (@stats);
 	my ($line, $div, $teamNo, $team);
 
-	open (FH,'<', $teams) or die ("Can't find teams.csv");
+	open (FH,'<', $teams) or die ("Can't find $teams");
 	while ($line = <FH>) {
 		($teamNo, $team, @stats) = split (/,/, $line);
 		$league {$team} = Team->new ($teamNo, \@stats);
@@ -79,17 +79,17 @@ sub update {
 	my ($line, $home, $away, $h, $a);
 	my ($junk, @junk);
 
-	open (FH,'<',$premdata) or die ("Can't find $premdata");
+	open (FH,'<', $premdata) or die ("Can't find $premdata");
 	$line = <FH>;
 	while ($line = <FH>) {
 		($junk, $junk, $home, $away, $h, $a, @junk) = split (/,/, $line);
 
 #		shift existing array down
-		shift $league{$home}->homes ();
-		shift $league{$away}->aways ();
+		shift @{ $league{$home}->homes () };
+		shift @{ $league{$away}->aways () };
 
-		push $league{$home}->homes (), Score->new ($h, $a);			
-		push $league{$away}->aways (), Score->new ($a, $h);
+		push @{ $league{$home}->homes () }, Score->new ($h, $a);			
+		push @{ $league{$away}->aways () }, Score->new ($a, $h);
 	}
 	close FH;
 	write_teams ($teams);
